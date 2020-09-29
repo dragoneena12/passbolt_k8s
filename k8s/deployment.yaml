@@ -19,7 +19,7 @@ spec:
             - containerPort: 80
           env:
             - name: DATASOURCES_DEFAULT_HOST
-              value: passbolt-mariadb
+              value: passbolt-db
             - name: DATASOURCES_DEFAULT_PASSWORD
               valueFrom:
                 secretKeyRef:

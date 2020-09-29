@@ -1,7 +1,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: passbolt-mariadb-pv-volume
+  name: passbolt-db-pv-volume
   labels:
     type: local
 spec:
@@ -16,7 +16,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: passbolt-mariadb-pv-claim
+  name: passbolt-db-pv-claim
 spec:
   storageClassName: manual
   accessModes:
