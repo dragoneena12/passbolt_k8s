@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: passbolt-mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: passbolt-mysql
+  clusterIP: None
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: passbolt-mysql
+spec:
+  selector:
+    matchLabels:
+      app: passbolt-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: passbolt-mysql
+    spec:
+      containers:
+        - image: mysql:5.6
+          name: passbolt-mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: passbolt
+                  key: root_password
+            - name: MYSQL_DATABASE
+              value: passbolt
+            - name: MYSQL_USER
+              value: passbolt
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: passbolt
+                  key: user_password
+          ports:
+            - containerPort: 3306
+              name: passbolt-mysql
+          volumeMounts:
+            - name: passbolt-mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: passbolt-mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: passbolt-mysql-pv-claim
