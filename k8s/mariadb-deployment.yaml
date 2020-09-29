@@ -1,32 +1,32 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: passbolt-mysql
+  name: passbolt-mariadb
 spec:
   ports:
     - port: 3306
   selector:
-    app: passbolt-mysql
+    app: passbolt-mariadb
   clusterIP: None
 ---
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
 metadata:
-  name: passbolt-mysql
+  name: passbolt-mariadb
 spec:
   selector:
     matchLabels:
-      app: passbolt-mysql
+      app: passbolt-mariadb
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: passbolt-mysql
+        app: passbolt-mariadb
     spec:
       containers:
-        - image: mysql:5.6
-          name: passbolt-mysql
+        - image: mariadb:10.5.5
+          name: passbolt-mariadb
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -44,11 +44,11 @@ spec:
                   key: user_password
           ports:
             - containerPort: 3306
-              name: passbolt-mysql
+              name: passbolt-mariadb
           volumeMounts:
-            - name: passbolt-mysql-persistent-storage
-              mountPath: /var/lib/mysql
+            - name: passbolt-mariadb-persistent-storage
+              mountPath: /var/lib/mariadb
       volumes:
-        - name: passbolt-mysql-persistent-storage
+        - name: passbolt-mariadb-persistent-storage
           persistentVolumeClaim:
-            claimName: passbolt-mysql-pv-claim
+            claimName: passbolt-mariadb-pv-claim
