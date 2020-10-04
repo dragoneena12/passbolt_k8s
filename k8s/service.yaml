@@ -7,6 +7,6 @@ spec:
     app: passbolt
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
+      port: 443
+      targetPort: 443
+  type: IPCluster
